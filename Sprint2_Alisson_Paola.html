@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrices - Banque Wilson & Smith</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 50px;
+      background: #f0f8ff;
+      /* Gris pâle */
+    }
+
+    .container {
+      background: #ffffff;
+      /* Blanc */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    nav {
+      background: #3498db;
+      /* Bleu */
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    nav a {
+      color: #ffffff;
+      /* Blanc */
+    }
+
+    .calculator-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .calculator-links li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Banque Wilson & Smith</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="showCalculator('mortgage')">Financement hypothécaire</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="showCalculator('compound')">Calculateur d'intérêt composé</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="showCalculator('cagr')">Calculateur de rendement annuel (CAGR)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="showCalculator('tax')">Calculateur d'impôt provincial</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Demande de crédit (Financement hypothécaire) -->
+    <div id="mortgage" class="mt-4">
+      <h1>Financement hypothécaire</h1>
+      <form id="mortgageForm">
+        <div class="form-group">
+          <label for="loanAmount">Montant d'emprunt (en $) :</label>
+          <input type="number" class="form-control" id="loanAmount" required>
+        </div>
+        <div class="form-group">
+          <label for="downPayment">Mise de fonds fournie (en $) :</label>
+          <input type="number" class="form-control" id="downPayment" required>
+        </div>
+        <div class="form-group">
+          <label for="interestRate">Taux d'intérêt du prêt (%) :</label>
+          <input type="number" class="form-control" id="interestRate" required>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="insuranceCheck">
+          <label class="form-check-label" for="insuranceCheck">Assurance hypothécaire</label>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="submitMortgage()">Soumettre</button>
+      </form>
+    </div>
+
+    <hr>
+
+    <!-- Calculateur d'intérêt composé avec tableau -->
+    <div id="compound" class="mt-4" style="display: none;">
+      <h1>Calculateur d'Intérêt Composé</h1>
+      <form id="compoundForm">
+        <div class="form-group">
+          <label for="initialAmount">Montant Initial (en $) :</label>
+          <input type="number" class="form-control" id="initialAmount" required>
+        </div>
+        <div class="form-group">
+          <label for="annualRate">Taux Annuel d'Intérêt (%) :</label>
+          <input type="number" class="form-control" id="annualRate" required>
+        </div>
+        <div class="form-group">
+          <label for="years">Nombre d'Années :</label>
+          <input type="number" class="form-control" id="years" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="calculateCompoundInterest()">Calculer</button>
+        <div id="compoundResult" class="mt-3"></div>
+        <div id="compoundTable" class="mt-3"></div> <!-- Tableau sera ajouté ici -->
+      </form>
+    </div>
+
+    <hr>
+
+    <!-- Calculateur de rendement annuel (CAGR) -->
+    <div id="cagr" class="mt-4">
+      <h1>Calculateur de Rendement Annuel (CAGR)</h1>
+      <form id="cagrForm">
+        <div class="form-group">
+          <label for="initialValue">Valeur Initiale :</label>
+          <input type="number" class="form-control" id="initialValue" required>
+        </div>
+        <div class="form-group">
+          <label for="finalValue">Valeur Finale :</label>
+          <input type="number" class="form-control" id="finalValue" required>
+        </div>
+        <div class="form-group">
+          <label for="yearsCagr">Nombre d'Années :</label>
+          <input type="number" class="form-control" id="yearsCagr" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="calculateCAGR()">Calculer</button>
+        <div id="cagrResult" class="mt-3"></div>
+      </form>
+    </div>
+
+    <hr>
+
+    <!-- Calculateur d'impôt provincial -->
+    <div id="tax" class="mt-4" style="display: none;">
+      <h1>Calculateur d'Impôt Provincial</h1>
+      <form id="taxForm">
+        <div class="form-group">
+          <label for="income">Revenu Annuel :</label>
+          <input type="number" class="form-control" id="income" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="calculateProvincialTax()">Calculer</button>
+        <div id="taxResult" class="mt-3"></div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    // Fonction pour afficher le calculateur spécifié
+    function showCalculator(calculatorId) {
+      // Masquer tous les calculateurs
+      document.getElementById('mortgage').style.display = 'none';
+      document.getElementById('compound').style.display = 'none';
+      document.getElementById('cagr').style.display = 'none';
+      document.getElementById('tax').style.display = 'none';
+
+      // Afficher le calculateur sélectionné
+      document.getElementById(calculatorId).style.display = 'block';
+    }
+
+    // Fonction pour le tableau d'intérêt composé
+    function calculateCompoundInterest() {
+      const initialAmount = parseFloat(document.getElementById('initialAmount').value);
+      const annualRate = parseFloat(document.getElementById('annualRate').value);
+      const years = parseInt(document.getElementById('years').value);
+
+      let compoundResult = initialAmount * Math.pow((1 + annualRate / 100), years);
+      document.getElementById('compoundResult').innerHTML = `<p>Après ${years} ans, le montant total sera de $${compoundResult.toFixed(2)}</p>`;
+
+      // Ajout du tableau
+      let tableHTML = '<table class="table"><thead><tr><th>Année</th><th>Montant Accumulé</th></tr></thead><tbody>';
+      for (let year = 0; year <= years; year++) {
+        const amount = initialAmount * Math.pow((1 + annualRate / 100), year);
+        tableHTML += `<tr><td>${year}</td><td>$${amount.toFixed(2)}</td></tr>`;
+      }
+      tableHTML += '</tbody></table>';
+      document.getElementById('compoundTable').innerHTML = tableHTML;
+    }
+
+    // Fonction pour la demande de crédit (Financement hypothécaire)
+    function submitMortgage() {
+      const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+      const downPayment = parseFloat(document.getElementById('downPayment').value);
+      const interestRate = parseFloat(document.getElementById('interestRate').value);
+      const insuranceCheck = document.getElementById('insuranceCheck').checked;
+
+      // Vérification de la mise de fonds
+      const minDownPayment = insuranceCheck ? loanAmount * 0.05 : loanAmount * 0.2;
+      const isDownPaymentValid = downPayment >= minDownPayment;
+
+      // Soumission uniquement si la mise de fonds est suffisante
+      if (isDownPaymentValid) {
+        alert("Demande de crédit soumise avec succès!");
+      } else {
+        alert("La mise de fonds fournie n'est pas suffisante.");
+      }
+    }
+
+    // Fonction pour le calculateur d'impôt provincial
+    function calculateProvincialTax() {
+      const income = parseFloat(document.getElementById('income').value);
+
+      // Logique simple basée sur les tranches d'imposition
+      let taxAmount = 0;
+
+      if (income <= 49275) {
+        taxAmount = income * 0.14;
+      } else {
+        taxAmount = 49275 * 0.14 + (income - 49275) * 0.19;
+      }
+
+      document.getElementById('taxResult').innerHTML = `<p>Le montant d'impôt provincial est de $${taxAmount.toFixed(2)}</p>`;
+    }
+
+    // Fonction pour le calcul du CAGR
+    function calculateCAGR() {
+      const initialValue = parseFloat(document.getElementById('initialValue').value);
+      const finalValue = parseFloat(document.getElementById('finalValue').value);
+      const yearsCagr = parseInt(document.getElementById('yearsCagr').value);
+
+      // Formule du CAGR : [(Valeur Finale / Valeur Initiale)^(1/n) - 1] * 100
+      const cagr = ((finalValue / initialValue) ** (1 / yearsCagr) - 1) * 100;
+
+      document.getElementById('cagrResult').innerHTML = `<p>Le rendement annuel moyen est de ${cagr.toFixed(2)}%</p>`;
+    }
+  </script>
+</body>
+
+</html>
